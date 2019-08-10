@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="iOS 13.0 system colors" minToolsVersion="11.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SummaryHeaderView" customModule="RockPaperScissors" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="88"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PNq-Lq-AKM">
+                    <rect key="frame" x="162" y="31.5" width="51.5" height="25.5"/>
+                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="21"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kqj-f3-TV0" userLabel="Separator">
+                    <rect key="frame" x="0.0" y="87" width="375" height="1"/>
+                    <color key="backgroundColor" red="0.90980392156862744" green="0.90980392156862744" blue="0.90980392156862744" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="HL7-MU-rEj"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" cocoaTouchSystemColor="secondarySystemBackgroundColor"/>
+            <color key="tintColor" red="0.38431372549019605" green="0.396078431372549" blue="0.41176470588235292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Kqj-f3-TV0" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="FUa-bC-Cw9"/>
+                <constraint firstItem="PNq-Lq-AKM" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="Pem-tt-gb1"/>
+                <constraint firstItem="PNq-Lq-AKM" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Ukr-mC-mVa"/>
+                <constraint firstAttribute="trailing" secondItem="Kqj-f3-TV0" secondAttribute="trailing" id="nTd-dI-XiP"/>
+                <constraint firstItem="Kqj-f3-TV0" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="rIz-TM-D2g"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="label" destination="PNq-Lq-AKM" id="xVH-03-aLV"/>
+            </connections>
+            <point key="canvasLocation" x="138" y="154"/>
+        </view>
+    </objects>
+</document>
