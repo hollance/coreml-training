@@ -84,4 +84,6 @@ pipeline_spec.description.trainingInput[1].shortDescription = "True label"
 pipeline_spec.pipelineClassifier.pipeline.models.add().CopyFrom(base_spec)
 pipeline_spec.pipelineClassifier.pipeline.models.add().CopyFrom(knn_spec)
 
+pipeline_spec.pipelineClassifier.pipeline.names.extend(["FeatureExtractor", "kNNClassifier"])
+
 coremltools.utils.save_spec(pipeline_spec, "../Models/HandskNN.mlmodel")

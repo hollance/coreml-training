@@ -29,14 +29,14 @@ extension Models {
   }
 
   private static func urlForModelInDocumentsDirectory(_ model: Models) -> URL {
-    applicationDocumentsDirectory.appendingPathComponent(model.rawValue)
-                                 .appendingPathExtension("mlmodelc")
+    Gestures.urlForModelInDocumentsDirectory(model.rawValue)
   }
 
   private static func loadModel(url: URL) -> MLModel? {
     do {
       let config = MLModelConfiguration()
       config.computeUnits = .all
+      //config.parameters = [MLParameterKey.numberOfNeighbors.scoped(to: "kNNClassmodeifier"): NSNumber(value: 500)]
       return try MLModel(contentsOf: url, configuration: config)
     } catch {
       print("Error loading model: \(error)")
@@ -45,11 +45,11 @@ extension Models {
   }
 
   static func loadTrainedNearestNeighbors() -> MLModel? {
-    loadModel(url: urlForModelInDocumentsDirectory(.trainedNearestNeighbors))
+    loadModel(url: trainedNearestNeighborsURL)
   }
 
   static func loadTrainedNeuralNetwork() -> MLModel? {
-    loadModel(url: urlForModelInDocumentsDirectory(.trainedNeuralNetwork))
+    loadModel(url: trainedNeuralNetworkURL)
   }
 }
 
@@ -86,6 +86,11 @@ extension Models {
   private static func deleteModelFromDocumentsDirectory(_ model: Models) {
     removeIfExists(at: urlForModelInDocumentsDirectory(model))
   }
+}
+
+func urlForModelInDocumentsDirectory(_ model: String) -> URL {
+  applicationDocumentsDirectory.appendingPathComponent(model)
+                               .appendingPathExtension("mlmodelc")
 }
 
 /**

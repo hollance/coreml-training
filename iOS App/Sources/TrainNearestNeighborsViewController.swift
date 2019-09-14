@@ -29,6 +29,9 @@ class TrainNearestNeighborsViewController: UITableViewController {
     trainButton.isEnabled = false
 
     assert(model.modelDescription.isUpdatable)
+
+    //print(model.modelDescription.trainingInputDescriptionsByName)
+    //print(model.modelDescription.parameterDescriptionsByKey)
   }
 
   // MARK: - Table view data source
@@ -161,9 +164,64 @@ class TrainNearestNeighborsViewController: UITableViewController {
     }
   }
 
-  private func train() {
-    // TODO: coming in part 3 of the blog post series!
+  private func batchProvider() throws -> MLBatchProvider {
+    var batchInputs: [MLFeatureProvider] = []
 
-    self.trainingDidComplete(success: true)
+    for indexPath in selected {
+      // For training we need to know the correct label of the example.
+      let trueLabel = imagesByLabel.labelName(of: indexPath.section)
+
+      // Load the image into a CVPixelBuffer.
+      let index = imagesByLabel.flatIndex(for: trueLabel, at: indexPath.row)
+      let featureValue = try imageLoader.featureValue(at: index)
+
+      // Note: We could also have used an MLDictionaryFeatureProvider here,
+      // as done in Predictor but this time with "image" and "label" fields.
+      // We can also use the generated YourModelTrainingInput class, but note
+      // that it expects a CVPixelBuffer for the image instead of an MLFeatureValue.
+
+      if let pixelBuffer = featureValue.imageBufferValue {
+        let featureProvider = HandskNNTrainingInput(image: pixelBuffer, label: trueLabel)
+        batchInputs.append(featureProvider)
+      }
+    }
+
+    return MLArrayBatchProvider(array: batchInputs)
+  }
+
+  private func train() {
+    do {
+      let trainingData = try batchProvider()
+
+      let updatableModelURL = Models.trainedNearestNeighborsURL
+
+      let config = model.configuration
+
+      let updateTask = try MLUpdateTask(forModelAt: updatableModelURL,
+                                        trainingData: trainingData,
+                                        configuration: config,
+                                        completionHandler: { context in
+        //print("Done!", context)
+
+        // Overwrite the mlmodelc with the updated one.
+        do {
+          let tempURL = urlForModelInDocumentsDirectory("tempNearestNeighbors")
+          try context.model.write(to: tempURL)
+
+          Models.deleteTrainedNearestNeighbors()
+          copyIfNotExists(from: tempURL, to: updatableModelURL)
+          removeIfExists(at: tempURL)
+        } catch {
+          print("Error saving k-NN model:", error)
+        }
+
+        self.trainingDidComplete(success: true)
+      })
+
+      updateTask.resume()
+    } catch {
+      print("Error training k-NN:", error)
+      trainingDidComplete(success: false)
+    }
   }
 }
