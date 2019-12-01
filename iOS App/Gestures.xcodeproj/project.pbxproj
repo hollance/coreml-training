@@ -20,6 +20,9 @@
 		7B43806F22B6600D0034AE3C /* HandskNN.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 7B43806E22B6600D0034AE3C /* HandskNN.mlmodel */; };
 		7B43807222B6783E0034AE3C /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B43807122B6783E0034AE3C /* CameraViewController.swift */; };
 		7B43807522B680C70034AE3C /* TrainNeuralNetworkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B43807422B680C70034AE3C /* TrainNeuralNetworkViewController.swift */; };
+		7B72E0F9238DC2D100A1F15F /* NeuralNetworkTrainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B72E0F7238DC2D100A1F15F /* NeuralNetworkTrainer.swift */; };
+		7B72E0FA238DC2D100A1F15F /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B72E0F8238DC2D100A1F15F /* History.swift */; };
+		7B72E0FC238FF11300A1F15F /* TrainingBatchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B72E0FB238FF11300A1F15F /* TrainingBatchProvider.swift */; };
 		7B89B54F22B6C73D002DBA36 /* Predictor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B89B54E22B6C73D002DBA36 /* Predictor.swift */; };
 		7B89B55122B6D235002DBA36 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B89B55022B6D235002DBA36 /* Settings.swift */; };
 		7B89B55722B7C905002DBA36 /* TrainNearestNeighborsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B89B55622B7C905002DBA36 /* TrainNearestNeighborsViewController.swift */; };
@@ -57,6 +60,9 @@
 		7B43806E22B6600D0034AE3C /* HandskNN.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = HandskNN.mlmodel; sourceTree = "<group>"; };
 		7B43807122B6783E0034AE3C /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		7B43807422B680C70034AE3C /* TrainNeuralNetworkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainNeuralNetworkViewController.swift; sourceTree = "<group>"; };
+		7B72E0F7238DC2D100A1F15F /* NeuralNetworkTrainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NeuralNetworkTrainer.swift; sourceTree = "<group>"; };
+		7B72E0F8238DC2D100A1F15F /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		7B72E0FB238FF11300A1F15F /* TrainingBatchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingBatchProvider.swift; sourceTree = "<group>"; };
 		7B89B54E22B6C73D002DBA36 /* Predictor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Predictor.swift; sourceTree = "<group>"; };
 		7B89B55022B6D235002DBA36 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		7B89B55622B7C905002DBA36 /* TrainNearestNeighborsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainNearestNeighborsViewController.swift; sourceTree = "<group>"; };
@@ -166,9 +172,12 @@
 		7B43807322B680B70034AE3C /* Training screen */ = {
 			isa = PBXGroup;
 			children = (
+				7BE1EF3122BD1C6400DC3AAE /* GraphView.swift */,
+				7B72E0F8238DC2D100A1F15F /* History.swift */,
+				7B72E0F7238DC2D100A1F15F /* NeuralNetworkTrainer.swift */,
 				7B89B55622B7C905002DBA36 /* TrainNearestNeighborsViewController.swift */,
 				7B43807422B680C70034AE3C /* TrainNeuralNetworkViewController.swift */,
-				7BE1EF3122BD1C6400DC3AAE /* GraphView.swift */,
+				7B72E0FB238FF11300A1F15F /* TrainingBatchProvider.swift */,
 			);
 			name = "Training screen";
 			sourceTree = "<group>";
@@ -287,6 +296,7 @@
 			files = (
 				7BE1EF3A22BD1D2500DC3AAE /* SummaryHeaderView.swift in Sources */,
 				7B89B55722B7C905002DBA36 /* TrainNearestNeighborsViewController.swift in Sources */,
+				7B72E0FA238DC2D100A1F15F /* History.swift in Sources */,
 				7BE1EF3222BD1C6400DC3AAE /* GraphView.swift in Sources */,
 				7B43806722B527640034AE3C /* ImageDataset.swift in Sources */,
 				7BE1EF3822BD1D1700DC3AAE /* EvaluateCell.swift in Sources */,
@@ -294,10 +304,12 @@
 				7B43806B22B574CA0034AE3C /* ImageLoader.swift in Sources */,
 				7B322AE122FEFFE2002C7C38 /* Globals.swift in Sources */,
 				7B43805322B3F2360034AE3C /* EvaluateViewController.swift in Sources */,
+				7B72E0F9238DC2D100A1F15F /* NeuralNetworkTrainer.swift in Sources */,
 				7B89B54F22B6C73D002DBA36 /* Predictor.swift in Sources */,
 				7B43807222B6783E0034AE3C /* CameraViewController.swift in Sources */,
 				7BE1EF3622BD1CF400DC3AAE /* SectionHeaderView.swift in Sources */,
 				7BE1EF3022BCD18500DC3AAE /* AddGestureViewController.swift in Sources */,
+				7B72E0FC238FF11300A1F15F /* TrainingBatchProvider.swift in Sources */,
 				7B8AF1B720D8324E00DE58D5 /* DataViewController.swift in Sources */,
 				7B322ADF22FEEDB2002C7C38 /* Labels.swift in Sources */,
 				7BDCA4B122E09DBC00AA1F57 /* Models.swift in Sources */,

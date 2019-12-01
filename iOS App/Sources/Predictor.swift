@@ -132,3 +132,75 @@ class Predictor {
     updateHandler(shouldCancel ? .cancelled : .completed)
   }
 }
+
+extension Predictor {
+  /**
+    Computes the loss and accuracy over the entire dataset. This is done after
+    an epoch of training on the neural network.
+   */
+  func evaluate(loader: ImageLoader) -> (Double, Double) {
+    let startTime = CACurrentMediaTime()
+
+    var correctCount = 0
+    var exampleCount = 0
+    var runningLoss: Double = 0
+
+    loader.reset()
+    while let batch = try? loader.nextBatch(), !shouldCancel {
+      if let batchPredictions = predict(batch: batch) {
+        for (i, (j, _)) in batch.enumerated() {
+          let predictedLabel = batchPredictions[i].label
+          let trueLabel = loader.dataset.label(at: j)
+          exampleCount += 1
+
+          // Because the user can choose their own labels, but the mlmodel
+          // contains hardcoded class names (user0, user1, etc), we need to
+          // translate between them.
+          // Core ML will put the hardcoded class names into the predicted
+          // probabilities dictionary. But the true labels from ImageDataset
+          // are the ones chosen by the user.
+          let trueLabelInMLModel = labels.internalLabel(for: trueLabel)
+
+          // Compute the accuracy.
+          if predictedLabel == trueLabelInMLModel { correctCount += 1 }
+
+          // Core ML doesn't tell us what the loss is for inference, only for
+          // training. But we can always compute it ourselves, of course. :-)
+          //
+          // The cross-entropy loss for a single example is:
+          //     CE = -sum t[i] * log(p[i])
+          //
+          // where t is the one-hot encoded true label and p[i] is the softmax
+          // output for the i-th class. Since t[i] is 1 for the true class and
+          // 0 for all other classes, we only need to look at the predicted
+          // probability of the true class. If that probability is close to 1,
+          // the logarithm is close to 0 and the error is small; but the lower
+          // the predicted probability for the true class, the larger the error.
+          //
+          // We do add a small value to make sure we never take log(0), which
+          // gives infinity and wreaks havoc.
+          let probabilityForTrueClass = batchPredictions[i].probabilities[trueLabelInMLModel]!.doubleValue
+          let crossEntropy = -log(probabilityForTrueClass + 1e-100)
+          runningLoss += crossEntropy
+
+          // Enable this to examine the individual predictions and how much
+          // they contribute to the loss:
+          //print(String(format: "\t%@ correct? %@, prob: %.5f, loss: %.5f", trueLabelInMLModel, (predictedLabel == trueLabelInMLModel) ? "√" : "×", probabilityForTrueClass, crossEntropy))
+        }
+      }
+    }
+
+    print("Evaluation took \(CACurrentMediaTime() - startTime) sec.")
+
+    // No images in the dataset or they all gave errors.
+    // If you cancel the training process during validation, the computed loss
+    // and accuracy are only for a subset of the examples, which is misleading
+    // so we simply report zero loss / accuracy here.
+    if exampleCount == 0 || shouldCancel { return (0, 0) }
+
+    // The loss is averaged over all the examples.
+    let loss = runningLoss / Double(exampleCount)
+    let accuracy = Double(correctCount) / Double(exampleCount)
+    return (loss, accuracy)
+  }
+}

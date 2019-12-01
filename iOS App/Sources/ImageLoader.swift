@@ -1,18 +1,21 @@
 import CoreML
 import Vision
+import CoreImage
 
 /**
   Loads the image files from the dataset into batches of MLFeatureValue objects.
  */
 class ImageLoader {
-  let dataset: ImageDataset
-  let batchSize: Int
-  let shuffle: Bool
-  let augment: Bool
-  let imageConstraint: MLImageConstraint
+  var dataset: ImageDataset
+  var batchSize: Int
+  var shuffle: Bool
+  var augment: Bool
+  var imageConstraint: MLImageConstraint
 
   private var batches: [[Int]] = []
   private(set) var index = 0
+
+  private var ciContext = CIContext()
 
   typealias Batch = [(Int, MLFeatureValue)]
 
@@ -55,7 +58,26 @@ class ImageLoader {
 
     // After this function returns, featureValue.imageBufferValue contains
     // the CVPixelBuffer object with the correct width / height for the model.
-    return try MLFeatureValue(imageAt: imageURL, constraint: imageConstraint, options: imageOptions)
+    let featureValue = try MLFeatureValue(imageAt: imageURL,
+                                          constraint: imageConstraint,
+                                          options: imageOptions)
+
+    // Perform data augmentation, if enabled.
+    if augment, let pixelBuffer = featureValue.imageBufferValue {
+      // Randomly flip the image horizontally.
+      if Bool.random() {
+         flipHorizontally(pixelBuffer: pixelBuffer)
+      }
+
+      // Randomly flip the image vertically.
+      if Bool.random() {
+         flipVertically(pixelBuffer: pixelBuffer)
+      }
+
+      // TODO: You can add other data augmentations here.
+    }
+
+    return featureValue
   }
 
   /** Begins a new epoch. */
@@ -110,5 +132,19 @@ class ImageLoader {
       features.append((index, try featureValue(at: index)))
     }
     return features
+  }
+
+  private func flipHorizontally(pixelBuffer: CVPixelBuffer) {
+    var image = CIImage(cvPixelBuffer: pixelBuffer)
+    image = image.transformed(by: CGAffineTransform(scaleX: -1, y: 1))
+    image = image.transformed(by: CGAffineTransform(translationX: image.extent.width, y: 0))
+    ciContext.render(image, to: pixelBuffer)
+  }
+
+  private func flipVertically(pixelBuffer: CVPixelBuffer) {
+    var image = CIImage(cvPixelBuffer: pixelBuffer)
+    image = image.transformed(by: CGAffineTransform(scaleX: 1, y: -1))
+    image = image.transformed(by: CGAffineTransform(translationX: 0, y: image.extent.height))
+    ciContext.render(image, to: pixelBuffer)
   }
 }

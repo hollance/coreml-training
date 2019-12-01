@@ -75,11 +75,13 @@ class MenuViewController: UITableViewController {
   @IBAction func resetToEmptyNeuralNetwork() {
     Models.deleteTrainedNeuralNetwork()
     Models.copyEmptyNeuralNetwork()
+    history.delete()
   }
 
   @IBAction func resetToTuriNeuralNetwork() {
     Models.deleteTrainedNeuralNetwork()
     Models.copyTuriNeuralNetwork()
+    history.delete()
   }
 
   @IBAction func backgroundTrainingSwitchTapped(_ sender: UISwitch) {

@@ -4,13 +4,13 @@ class Settings {
   init() {
     UserDefaults.standard.register(defaults: [
       "learningRate": 0.001,
-      "augmentation": true,
+      "augmentation": false,
       "backgroundTraining": false
     ])
   }
 
-  var learningRate: Float {
-    get { UserDefaults.standard.float(forKey: "learningRate") }
+  var learningRate: Double {
+    get { UserDefaults.standard.double(forKey: "learningRate") }
     set { UserDefaults.standard.set(newValue, forKey: "learningRate") }
   }
 

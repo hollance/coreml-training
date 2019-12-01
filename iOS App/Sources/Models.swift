@@ -36,7 +36,10 @@ extension Models {
     do {
       let config = MLModelConfiguration()
       config.computeUnits = .all
-      //config.parameters = [MLParameterKey.numberOfNeighbors.scoped(to: "kNNClassmodeifier"): NSNumber(value: 500)]
+
+      // You can override the model's hyperparameters like this:
+      //config.parameters = [MLParameterKey.numberOfNeighbors: 10]
+
       return try MLModel(contentsOf: url, configuration: config)
     } catch {
       print("Error loading model: \(error)")

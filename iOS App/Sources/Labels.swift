@@ -20,6 +20,19 @@ class Labels {
   // The names of the labels for the neural network in the mlmodel file: user0,
   // user1, user2, and so on. Core ML's predictions will use these labels, but
   // we don't want to show these to the user.
+  //
+  // Note: It would be best if we grabbed these class names from the mlmodel,
+  // but there is no API that lets us do this right now (apart from making an
+  // actual prediction). Although it is possible to add the class names as
+  // metadata in the mlmodel and then we can read them from modelDescription.
+  //
+  // Note: These internal label names are only needed for the neural network.
+  // The app lets users add new gestures, but a neural net always has a fixed
+  // number of outputs. That's why we've added 7 placeholder labels in addition
+  // to the 3 built-in ones.
+  //
+  // k-NN does not have this restriction, and the label names inside the k-NN's
+  // mlmodel are always the ones chosen by the user.
   lazy var internalLabelNames: [String] = {
     builtinLabelNames + (0..<7).map { "user\($0)" }
   }()
@@ -77,7 +90,8 @@ class Labels {
   /**
     Converts an internal label, such as "user0", into a user-chosen label.
     This is useful for converting predictions, which use the internal name,
-    into text for display.
+    into text for display. (Used only for the neural network; for k-NN there
+    is no difference between internal labels and user-chosen labels.)
    */
   func userLabel(for internalLabel: String) -> String {
     if let idx = internalLabelIndices[internalLabel], idx < labelNames.count {
@@ -85,5 +99,16 @@ class Labels {
     } else {
       return internalLabel
     }
+  }
+
+  /**
+    Looks up the internal label, such as "user0", that corresponds to a given
+    user-chosen label. This is needed to match a prediction, which always uses
+    the internal label, to the label used by the ImageDataset. (Used only for
+    the neural network; for k-NN there is no difference between internal labels
+    and user-chosen labels.)
+   */
+  func internalLabel(for userLabel: String) -> String {
+    internalLabelNames[labels.labelIndices[userLabel]!]
   }
 }
